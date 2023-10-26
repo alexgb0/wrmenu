@@ -1,0 +1,21 @@
+#!/bin/sh
+
+SRC_DIRS=src
+OUT_DIR=out
+FILES=$(find $SRC_DIRS -name '*.cpp' -or -name '*.c' -or -name '*.s')
+
+CC=cc
+CFLAGS="-m64 -Wall -g"
+LIBS=-lraylib
+
+clear
+
+[[ -d $OUT_DIR ]] || mkdir "./$OUT_DIR"
+
+
+$CC $CFLAGS $LIBS $FILES -o "./$OUT_DIR/wrmenu"
+
+EXIT_SUCCESS=$?
+
+printf "build: successful\n\n"
+[[ $1 = "run" && $EXIT_SUCCESS -eq 0 ]] && ./$OUT_DIR/wrmenu
