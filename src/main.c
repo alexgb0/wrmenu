@@ -7,6 +7,8 @@
 
 int main()
 {
+	get_exec("librewolf.desktop");
+
 
 	struct files_list files = list_files();
 

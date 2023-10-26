@@ -57,7 +57,47 @@ struct files_list list_files()
 
 
 
+char *get_exec(const char *filename)
+{
+	int fname_size = strlen(filename) + 1;
+	int dsknm = strlen(DESKTOP_PATH) + 1;
+	assert(fname_size > 0);
+	char *fcpy = malloc((fname_size + dsknm) * sizeof(char));
+	assert(fcpy != NULL);
+	fcpy = strcpy(fcpy, DESKTOP_PATH);
+	assert(fcpy != NULL);
+	fcpy = strcat(fcpy, filename);
+	assert(fcpy != NULL);
 
+	struct stat st;
+	int st_success = stat(fcpy, &st);
+
+	if (st_success == 0)
+	{
+
+		FILE *fp;
+		fp = fopen(fcpy, "r");
+		assert(fp != NULL);
+		
+		free(fcpy);
+
+		char *file = malloc(st.st_size);
+		int err = fread(file, 1, st.st_size, fp);
+
+		if (err != st.st_size)
+		{
+			free(file);
+			return NULL;
+		}
+
+		printf("File:\n%s\n", file);
+		//DEV!
+		free(file);
+		return NULL;
+	}
+
+	return NULL;
+}
 
 
 
