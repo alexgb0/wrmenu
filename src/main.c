@@ -5,7 +5,7 @@
 #include "parsefile.h"
 #include "drawing.h"
 
-int main()
+int main(int argc, char **argv, char **envp)
 {
 	struct files_list files = list_files();
 
@@ -43,6 +43,9 @@ int main()
 		if (IsKeyPressed(KEY_ENTER))
 		{
 			char *exec = get_exec(files.filenm[selected_program]);
+			exec_program(exec);
+			free(exec);
+			CloseWindow();
 		}
 
 		BeginDrawing();

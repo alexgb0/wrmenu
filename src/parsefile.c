@@ -6,6 +6,8 @@
 #include <malloc.h>
 #include <string.h>
 
+extern char **environ;
+
 struct files_list list_files()
 {
 	DIR *dir;
@@ -144,6 +146,8 @@ char *parse_ini(char *file, const char *section, const char *key)
 					assert(ptr != NULL);
 					ptr[len] = '\0';
 
+					printf("path: %s\n", buff_value);
+
 					break;
 				}
 			}
@@ -157,7 +161,12 @@ char *parse_ini(char *file, const char *section, const char *key)
 
 int exec_program(char *path)
 {
-
+	pid_t pid;
+	char **env = environ;
+	char *argv[] = {"sh", "-c", path, NULL};
+	int status = posix_spawn(&pid, "/bin/sh", NULL, NULL, argv, env);
+	
+	return status;
 }
 
 void delete_files_list(struct files_list *file)
