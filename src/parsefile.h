@@ -31,6 +31,9 @@ struct files_list list_files();
 
 // Make sure to free the return string
 char *get_exec(const char *filename);
-char *parse_ini(const char *file, const char *key);
+char *parse_ini(char *file, const char *section, const char *key);
+
+// This function shoudn't be here but whatever
+int exec_program(char *path);
 
 void delete_files_list(struct files_list *file);

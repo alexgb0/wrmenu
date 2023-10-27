@@ -90,16 +90,75 @@ char *get_exec(const char *filename)
 			return NULL;
 		}
 
-		printf("File:\n%s\n", file);
-		//DEV!
-		free(file);
-		return NULL;
+		char *exec = parse_ini(file, "[Desktop Entry]", "Exec");
+		assert(("Exec file not found!", exec != NULL));
+		if (exec != NULL)
+			free(file);
+
+		return exec;
 	}
 
 	return NULL;
 }
 
+// 27/10/2023: This function explodes if it can't find the exec.
+// By default **should** be able to find it.
+char *parse_ini(char *file, const char *section, const char *key)
+{
+	char *tmp;
+	char *line = strtok_r(file, "\n", &tmp);
+	int in_section = 0;
+	char *ptr = NULL;
 
+	do 
+	{
+		if (line[0] == '[')
+		{
+			if (strcmp(line, section) == 0)
+			{
+				in_section = 1;
+				continue;
+			}
+			else
+			{
+				in_section = 0;
+				continue;
+			}
+		}
+
+		if (in_section)
+		{
+			char buff_key[128];
+			char buff_value[128];
+			int n = sscanf(line, "%4s=%s", buff_key, buff_value);
+
+			if (n == 2)
+			{
+				if (strcmp(buff_key, key) == 0)
+				{
+					int len = strlen(buff_value) + 1;
+					assert(len > 0);
+					ptr = malloc(len * sizeof(char));
+					assert(ptr != NULL);
+					ptr = strcpy(ptr, buff_value);
+					assert(ptr != NULL);
+					ptr[len] = '\0';
+
+					break;
+				}
+			}
+		}
+
+	}
+	while ((line = strtok_r(NULL, "\n", &tmp)) != NULL);
+
+	return ptr;
+}
+
+int exec_program(char *path)
+{
+
+}
 
 void delete_files_list(struct files_list *file)
 {

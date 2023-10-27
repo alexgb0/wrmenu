@@ -7,9 +7,6 @@
 
 int main()
 {
-	get_exec("librewolf.desktop");
-
-
 	struct files_list files = list_files();
 
 	static int screen_w = 500;
@@ -41,6 +38,11 @@ int main()
 		if (IsKeyPressed(KEY_UP) && selected_program > 0)
 		{
 			selected_program--;
+		}
+
+		if (IsKeyPressed(KEY_ENTER))
+		{
+			char *exec = get_exec(files.filenm[selected_program]);
 		}
 
 		BeginDrawing();
