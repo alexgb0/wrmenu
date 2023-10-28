@@ -25,6 +25,7 @@ int main(int argc, char **argv, char **envp)
 
 	const int font_heigh = 15;
 	int selected_program = 0;
+	char *exec;
 
 	while (!WindowShouldClose())
 	{
@@ -42,9 +43,8 @@ int main(int argc, char **argv, char **envp)
 
 		if (IsKeyPressed(KEY_ENTER))
 		{
-			char *exec = get_exec(files.filenm[selected_program]);
+			exec = get_exec(files.filenm[selected_program]);
 			exec_program(exec);
-			free(exec);
 			CloseWindow();
 		}
 
@@ -61,7 +61,9 @@ int main(int argc, char **argv, char **envp)
 		EndDrawing();
 	}
 
+	printf("closing the program...\n");
 
+	free(exec);
 	delete_files_list(&files);
 
 	return 0;
