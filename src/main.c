@@ -5,6 +5,8 @@
 #include "parsefile.h"
 #include "drawing.h"
 
+const char *FONT_PATH="/usr/share/fonts/TTF/HackNerdFontMono-Regular.ttf";
+
 int main(int argc, char **argv, char **envp)
 {
 	struct files_list files = list_files();
@@ -26,6 +28,8 @@ int main(int argc, char **argv, char **envp)
 	const int font_heigh = 15;
 	int selected_program = 0;
 	char *exec;
+
+	Font font = LoadFont(FONT_PATH);
 
 	while (!WindowShouldClose())
 	{
@@ -51,11 +55,18 @@ int main(int argc, char **argv, char **envp)
 		BeginDrawing();
 		ClearBackground(BLACK);
 
-		DrawText(buff_t.buff, 5, 5, 15, WHITE);
+		DrawTextEx(font, buff_t.buff, (Vector2){5, 5}, 15, 0.5f, WHITE);
+		//DrawText(buff_t.buff, 5, 5, 15, WHITE);
 		for (int i = 0; i < files.filenm_len - 1; ++i)
 		{
-			DrawText(files.filenm[i], 5, (font_heigh + 5) * (i + 1), 15, 
-					(i == selected_program) ? PINK : GRAY);
+			DrawTextEx(
+					font, 
+					files.filenm[i], 
+					(Vector2){5, (font_heigh + 5) * (i + 1)},
+					15, 
+					0.5f,
+					(i == selected_program) ? PINK : GRAY
+			);
 		}
 
 		EndDrawing();
@@ -63,6 +74,7 @@ int main(int argc, char **argv, char **envp)
 
 	printf("closing the program...\n");
 
+	UnloadFont(font);
 	free(exec);
 	delete_files_list(&files);
 

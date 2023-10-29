@@ -19,5 +19,5 @@ $CC $CFLAGS $CVER $LIBS $FILES -o "./$OUT_DIR/$PROGRAM_NAME"
 
 EXIT_SUCCESS=$?
 
-printf "build: successful\n\n"
+[[ $EXIT_SUCCESS -eq 0 ]] && printf "build: successful\n\n"
 [[ $1 = "run" && $EXIT_SUCCESS -eq 0 ]] && ./$OUT_DIR/$PROGRAM_NAME
