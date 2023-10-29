@@ -1,10 +1,12 @@
 #!/bin/sh
 
+PROGRAM_NAME=wrmenu
 SRC_DIRS=src
 OUT_DIR=out
 FILES=$(find $SRC_DIRS -name '*.cpp' -or -name '*.c' -or -name '*.s')
 
 CC=cc
+CVER=--std=c99
 CFLAGS="-m64 -Wall -g"
 LIBS=-lraylib
 
@@ -13,9 +15,9 @@ clear
 [[ -d $OUT_DIR ]] || mkdir "./$OUT_DIR"
 
 
-$CC $CFLAGS $LIBS $FILES -o "./$OUT_DIR/wrmenu"
+$CC $CFLAGS $CVER $LIBS $FILES -o "./$OUT_DIR/$PROGRAM_NAME"
 
 EXIT_SUCCESS=$?
 
 printf "build: successful\n\n"
-[[ $1 = "run" && $EXIT_SUCCESS -eq 0 ]] && ./$OUT_DIR/wrmenu
+[[ $1 = "run" && $EXIT_SUCCESS -eq 0 ]] && ./$OUT_DIR/$PROGRAM_NAME
