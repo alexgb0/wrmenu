@@ -8,6 +8,8 @@
 
 extern char **environ;
 
+struct files_list FILE_ERROR = {NULL, -1};
+
 struct files_list list_files()
 {
 	DIR *dir;
@@ -22,12 +24,26 @@ struct files_list list_files()
 		{
 
 			int str_len = strlen(ent->d_name) + 1;
-			assert(str_len > 0);
+			if (str_len <= 0)
+			{
+				free(names);
+				return FILE_ERROR;
+			}
+
 			char* str_mem = malloc(str_len * sizeof(char));
-			assert(str_mem != NULL);
+			if (str_mem == NULL)
+			{
+				free(names);
+				return FILE_ERROR;
+			}
 
 			str_mem = memcpy(str_mem, ent->d_name, str_len);
-			assert(str_mem != NULL);
+			if (str_mem == NULL)
+			{
+				free(names);
+				free(str_mem);
+				return FILE_ERROR;
+			}
 			
 			if (ent->d_name[0] == '.')
 			{
@@ -36,7 +52,10 @@ struct files_list list_files()
 			}
 
 			names = reallocarray(names, size, sizeof(char*));
-			assert(names != NULL);
+			if (names == NULL)
+			{
+				free(names);
+			}
 
 			names[size-1] = str_mem;
 
