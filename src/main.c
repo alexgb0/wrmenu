@@ -2,10 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "config.h"
 #include "parsefile.h"
 #include "drawing.h"
-
-const char *FONT_PATH="/usr/share/fonts/TTF/HackNerdFontMono-Regular.ttf";
 
 int main(int argc, char **argv, char **envp)
 {
@@ -49,7 +48,6 @@ int main(int argc, char **argv, char **envp)
 		{
 			exec = get_exec(files.filenm[selected_program]);
 			exec_program(exec);
-			CloseWindow();
 		}
 
 		BeginDrawing();

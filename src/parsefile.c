@@ -129,13 +129,14 @@ char *get_exec(const char *filename)
 // By default **should** be able to find it.
 char *find_exec_ini(char *file, const char *section, const char *key)
 {
-	char *tmp;
-	char *line = strtok_r(file, "\n", &tmp);
 	int in_section = 0;
 	char *ptr = NULL;
 
-	do 
+	for (char *line = strtok(file, "\n"); line != NULL; line = strtok(NULL, "\n"))
 	{
+		if (line == NULL)
+			continue;
+
 		if (line[0] == '[')
 		{
 			if (strcmp(line, section) == 0)
@@ -177,16 +178,17 @@ char *find_exec_ini(char *file, const char *section, const char *key)
 		}
 
 	}
-	while ((line = strtok_r(NULL, "\n", &tmp)) != NULL);
 
 	return ptr;
 }
 
 int exec_program(char *path)
 {
+	assert(path != NULL);
 	pid_t pid;
 	char **env = environ;
 	char *argv[] = {"sh", "-c", path, NULL};
+
 	int status = posix_spawn(&pid, "/bin/sh", NULL, NULL, argv, env);
 	
 	return status;
