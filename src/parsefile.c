@@ -82,9 +82,12 @@ char *get_exec(const char *filename)
 {
 	int fname_size = strlen(filename) + 1;
 	int dsknm = strlen(DESKTOP_PATH) + 1;
-	assert(fname_size > 0);
+	if (fname_size <= 0)
+		return NULL;
 	char *fcpy = malloc((fname_size + dsknm) * sizeof(char));
-	assert(fcpy != NULL);
+	if (fcpy == NULL)
+		return NULL;
+	
 	fcpy = strcpy(fcpy, DESKTOP_PATH);
 	assert(fcpy != NULL);
 	fcpy = strcat(fcpy, filename);
@@ -98,7 +101,7 @@ char *get_exec(const char *filename)
 
 		FILE *fp;
 		fp = fopen(fcpy, "r");
-		assert(fp != NULL);
+		assert(fp != NULL); // Is impossible to not find the folder
 		
 		free(fcpy);
 
@@ -111,8 +114,8 @@ char *get_exec(const char *filename)
 			return NULL;
 		}
 
-		char *exec = parse_ini(file, "[Desktop Entry]", "Exec");
-		assert(("Exec file not found!", exec != NULL));
+		char *exec = find_exec_ini(file, "[Desktop Entry]", "Exec");
+		assert(("Exec file not found!", exec != NULL)); // Again for being able to do anything we have to find this entry
 		if (exec != NULL)
 			free(file);
 
@@ -124,7 +127,7 @@ char *get_exec(const char *filename)
 
 // 27/10/2023: This function explodes if it can't find the exec.
 // By default **should** be able to find it.
-char *parse_ini(char *file, const char *section, const char *key)
+char *find_exec_ini(char *file, const char *section, const char *key)
 {
 	char *tmp;
 	char *line = strtok_r(file, "\n", &tmp);
@@ -160,7 +163,8 @@ char *parse_ini(char *file, const char *section, const char *key)
 					int len = strlen(buff_value) + 1;
 					assert(len > 0);
 					ptr = malloc(len * sizeof(char));
-					assert(ptr != NULL);
+					if (ptr == NULL)
+						return NULL;
 					ptr = strcpy(ptr, buff_value);
 					assert(ptr != NULL);
 					ptr[len] = '\0';
