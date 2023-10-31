@@ -48,6 +48,7 @@ int main(int argc, char **argv, char **envp)
 		{
 			exec = get_exec(files.filenm[selected_program]);
 			exec_program(exec);
+			goto EXIT;
 		}
 
 		BeginDrawing();
@@ -69,7 +70,7 @@ int main(int argc, char **argv, char **envp)
 
 		EndDrawing();
 	}
-
+EXIT:
 	printf("closing the program...\n");
 
 	UnloadFont(font);
